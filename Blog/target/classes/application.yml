@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: BLOG
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog_posts_management_schema
+    username: root
+    password: amedakevin1997
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
