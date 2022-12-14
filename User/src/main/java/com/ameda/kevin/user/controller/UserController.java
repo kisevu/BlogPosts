@@ -1,10 +1,18 @@
 package com.ameda.kevin.user.controller;
 
+import com.ameda.kevin.user.config.MyUserDetailsService;
+import com.ameda.kevin.user.config.Utility;
+import com.ameda.kevin.user.config.Request;
+import com.ameda.kevin.user.config.Response;
 import com.ameda.kevin.user.entity.User;
 import com.ameda.kevin.user.model.UserModel;
 import com.ameda.kevin.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +22,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private Utility utility;
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
 
     @PostMapping("/signUp")
     public void registerUser(@RequestBody UserModel userModel){
@@ -33,5 +48,20 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     public void deleteUser(@PathVariable("userId") String userId){
         userService.deleteUser(userId);
+    }
+
+    @PostMapping("/auth")
+    public Response auth(@RequestBody Request request) throws Exception{
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUserId(),
+                            request.getLastName())
+            );
+        }catch (BadCredentialsException ex){
+            throw new Exception("Invalid credentials",ex);
+        }
+        final UserDetails userDetails=myUserDetailsService.loadUserByUsername(request.getUserId());
+        final String token=utility.generateToken(userDetails);
+        return new Response(token);
     }
 }

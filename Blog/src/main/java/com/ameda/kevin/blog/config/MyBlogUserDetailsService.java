@@ -1,7 +1,7 @@
-package com.ameda.kevin.user.config;
+package com.ameda.kevin.blog.config;
 
-import com.ameda.kevin.user.entity.User;
-import com.ameda.kevin.user.repository.UserRepository;
+import com.ameda.kevin.blog.entity.Blog;
+import com.ameda.kevin.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class MyBlogUserDetailsService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
-    private UserRepository userRepository;
+    private BlogRepository  blogRepository;
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-       User user=userRepository.findByUserId(userId);
-       return new MyUserDetails(user.getUserId(),user.getLastName());
+    public UserDetails loadUserByUsername(String postId) throws UsernameNotFoundException {
+       Blog blog=blogRepository.findByBlogPostId(postId);
+       return new MyUserDetails(blog.getPostId(),blog.getPostTitle());
     }
 }

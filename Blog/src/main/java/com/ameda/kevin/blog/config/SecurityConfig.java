@@ -1,13 +1,10 @@
-package com.ameda.kevin.user.config;
+package com.ameda.kevin.blog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -21,17 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private MyUserDetailsService myUserDetailsService;
+    private MyBlogUserDetailsService myBlogUserDetailsService;
     @Autowired
     private RequestFilter requestFilter;
-
+    
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder(11);
     }
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(myUserDetailsService);
+        auth.userDetailsService(myBlogUserDetailsService);
     }
 
     @Bean
